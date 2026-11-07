@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f3ee">
+<meta name="robots" content="noindex,nofollow">
+<title>Instagram · tableau de bord</title>
+<style>
+:root{--bg:#f6f3ee;--card:#fff;--ink:#24211d;--mute:#7b746b;--line:#e6dfd4;--accent:#b9772f;--soft:#efe8dc;--ok:#2f7a3e;--warn:#a5442c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+header{position:sticky;top:0;z-index:5;background:rgba(246,243,238,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top{max-width:1000px;margin:0 auto;padding:12px 16px 0;display:flex;align-items:baseline;gap:10px}
+.top h1{font-size:18px;margin:0}.top .gen{color:var(--mute);font-size:12px;margin-left:auto}
+nav{max-width:1000px;margin:0 auto;display:flex;gap:2px;padding:6px 10px 0;overflow-x:auto}
+nav button{border:0;background:none;padding:8px 11px 10px;font:600 14px system-ui,Roboto,sans-serif;color:var(--mute);border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap}
+nav button.on{color:var(--ink);border-color:var(--accent)}
+main{max-width:1000px;margin:0 auto;padding:14px 16px 70px}
+h2{font-size:17px;margin:24px 0 10px}h2:first-child{margin-top:4px}
+h3{font-size:16px;margin:0}
+.sub{color:var(--mute);font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+.btn{display:block;width:100%;padding:14px;margin:0 0 8px;border:0;border-radius:12px;font:600 16px system-ui,Roboto,sans-serif;cursor:pointer}
+.b1{background:#fff;border:1px solid var(--line);color:var(--ink)}.b2{background:var(--ink);color:#fff}
+.btn:disabled{opacity:.5}
+.small{display:inline-block;border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 11px;font:600 13px system-ui,Roboto,sans-serif;cursor:pointer;color:var(--ink);text-decoration:none;white-space:nowrap}
+.small.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+.msg{color:var(--ok);font-size:13px;min-height:18px;margin:-2px 0 8px}.msg.err{color:var(--warn)}
+ol{padding-left:20px;color:#444;font-size:14px;margin:6px 0}ol li{margin-bottom:4px}
+pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;font:13px/1.45 system-ui,Roboto,sans-serif;margin:8px 0}
+.tag{display:inline-block;font-size:11px;font-weight:600;border-radius:10px;padding:1px 8px;background:var(--soft);color:#6b5a43;margin-right:4px;vertical-align:middle}
+.tag.ev{background:#f4e2cc;color:#8a4f12}.tag.todo{background:#f6dcd4;color:var(--warn)}
+img.e{background:var(--soft);display:block}
+/* carrousel */
+.car{position:relative;margin:10px -14px 4px}
+.track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.track::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:center;margin:0;padding:0 14px}
+.slide .fr{background:var(--soft);border-radius:8px;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4/5;max-height:72vh}
+.slide img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:3px;cursor:zoom-in;object-fit:contain}
+.slide figcaption{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--mute);padding:6px 2px 0}
+.slide figcaption b{color:var(--ink);font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:600}
+.arrow{position:absolute;top:calc(50% - 32px);width:40px;height:40px;border-radius:20px;border:0;background:rgba(255,255,255,.88);font-size:22px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.arrow.l{left:22px}.arrow.r{right:22px}
+@media(hover:none){.arrow{display:none}}
+.dots{text-align:center;font-size:12px;color:var(--mute);margin-top:2px}
+/* listes */
+.day{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.day:last-child{border-bottom:0}
+.day .d{width:70px;flex:none;color:var(--mute);font-size:13px;padding-top:1px}.day .d b{display:block;color:var(--ink);font-size:15px}
+.day .body{flex:1;min-width:0}
+.strip{display:flex;gap:4px;margin-top:7px;overflow-x:auto;scrollbar-width:none}.strip::-webkit-scrollbar{display:none}
+.strip img{height:72px;width:auto;min-width:48px;max-width:110px;object-fit:cover;border-radius:4px;flex:none}
+.day.gap .body{color:var(--warn);font-weight:600}.day.today .d b{color:var(--accent)}
+.week{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);margin:18px 0 6px}
+.row{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .i{width:20px;color:var(--mute);font-size:13px;flex:none;text-align:center}
+.row img{width:132px;height:99px;object-fit:cover;border-radius:6px;flex:none;cursor:zoom-in}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .t span{display:block;font-size:12px;color:var(--mute);line-height:1.35}
+.row .a{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+@media(max-width:520px){.row img{width:112px;height:84px}}
+.series-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px}
+.sc{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer}
+.sc img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.sc .t{padding:8px 10px 10px}.sc .t b{display:block;font-size:14px}.sc .t span{font-size:12px;color:var(--mute)}
+.empty{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center;color:var(--mute)}
+.warn{background:#fbeee9;border:1px solid #f0cfc4;color:#7b2f1c;border-radius:12px;padding:12px 14px;font-size:14px;margin:10px 0}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:var(--soft);padding:1px 5px;border-radius:5px;word-break:break-all}
+input[type=password],input[type=text]{width:100%;padding:13px;border:1px solid var(--line);border-radius:10px;font:16px system-ui,Roboto,sans-serif;background:#fff;margin:6px 0 10px}
+/* login */
+.login{max-width:380px;margin:12vh auto 0;padding:0 18px}
+/* feuille de choix */
+#sheet{position:fixed;inset:0;background:rgba(20,18,16,.5);display:none;z-index:15;align-items:flex-end;justify-content:center}
+#sheet .in{background:var(--bg);width:100%;max-width:1000px;max-height:88vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px 16px 30px}
+#sheet .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:8px 0 16px}
+#sheet .cand{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;cursor:pointer}
+#sheet .cand img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+#sheet .cand div{padding:5px 7px;font-size:11.5px;color:var(--mute)}#sheet .cand b{font-family:ui-monospace,Menlo,monospace;color:var(--ink);font-size:12px;display:block;word-break:break-all}
+#sheet .cand.sel{outline:3px solid var(--accent)}
+.confirm{position:sticky;bottom:-30px;background:var(--bg);padding:12px 0 6px;border-top:1px solid var(--line)}
+.cmp{display:flex;gap:10px;align-items:center;margin-bottom:10px}.cmp img{width:44%;height:auto;max-height:200px;object-fit:contain;border-radius:6px}.cmp span{font-size:22px;color:var(--mute)}
+#lb{position:fixed;inset:0;background:rgba(20,18,16,.94);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:20;padding:12px}
+#lb img{max-width:100%;max-height:84vh;border-radius:3px}
+#lb .cap{color:#eee;font-size:13px;margin-top:10px;text-align:center;font-family:ui-monospace,Menlo,monospace}#lb .cap span{display:block;color:#aaa;font-family:system-ui,sans-serif}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 10px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:16px;padding:7px 12px;font:600 13px system-ui,Roboto,sans-serif;cursor:pointer;color:var(--ink)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.small.red{color:var(--warn);border-color:#f0cfc4}
+label.ck{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:6px 0 4px}label.ck input{margin-top:3px}
+.tag.no{background:#f6dcd4;color:var(--warn)}.tag.ok{background:#dcefdc;color:var(--ok)}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 16px;border-radius:12px;font-size:14px;z-index:30;display:none;max-width:92vw;text-align:center}
+</style></head><body>
+<header id="hdr" style="display:none"><div class="top"><h1>Instagram</h1><span class="gen" id="gen"></span></div>
+<nav id="nav"><button data-t="jour" class="on">Aujourd'hui</button><button data-t="cal">Calendrier</button><button data-t="series">Séries</button><button data-t="reg">Réglages</button></nav></header>
+<main id="main"></main>
+<div id="sheet"><div class="in" id="sheetin"></div></div>
+<div id="lb"><img alt=""><div class="cap"></div></div>
+<div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=new Date().toLocaleDateString('sv-SE',{timeZone:'Europe/Paris'});
+const D=d=>new Date(d+'T12:00:00');
+const fmt=(d,o)=>D(d).toLocaleDateString('fr-FR',o||{weekday:'long',day:'numeric',month:'long'});
+const SAI={hiver:'hiver',printemps:'printemps',ete:'été',automne:'automne'};
+const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}};
+let KEY=null,T=null,POST=null,POSTURLS=[],tab='jour',detail=null;
+const S=id=>T.series.find(s=>s.id===id);
+const ph=(s,f)=>s.photos.find(p=>p.file===f)||{file:f};
+function toast(m,ms){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',ms||3500)}
+
+/* ---------- chiffrement ---------- */
+const hex=h=>new Uint8Array(h.match(/../g).map(x=>parseInt(x,16)));
+async function derive(pw,meta){const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt:hex(meta.salt),iterations:meta.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt'])}
+async function open(buf,key){const u=new Uint8Array(buf);return crypto.subtle.decrypt({name:'AES-GCM',iv:u.slice(0,12)},key||KEY,u.slice(12))}
+async function getBin(path){const r=await fetch(path+'?v='+(T?.generated||Date.now()),{cache:'no-cache'});if(!r.ok)throw new Error(path+' '+r.status);return open(await r.arrayBuffer())}
+const IMG=new Map();
+function imgURL(path){if(!IMG.has(path))IMG.set(path,getBin(path).then(b=>URL.createObjectURL(new Blob([b],{type:'image/jpeg'}))));return IMG.get(path)}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);fill(e.target)}}),{rootMargin:'400px'});
+function fill(el){imgURL(el.dataset.p).then(u=>{el.src=u}).catch(()=>{})}
+function hydrate(root){(root||document).querySelectorAll('img[data-p]:not([src])').forEach(el=>io.observe(el))}
+const im=(p,size,cls,attrs)=>p.k?`<img class="e ${cls||''}" data-p="${size}/${p.k}.bin" ${p.w?`width="${p.w}" height="${p.h}"`:''} alt="${esc(p.lr_file||p.file)}" ${attrs||''}>`:`<img class="e ${cls||''}" alt="">`;
+
+/* ---------- démarrage ---------- */
+async function start(){
+  let meta;try{meta=await (await fetch('meta.json?t='+Date.now(),{cache:'no-store'})).json()}catch(e){$('#main').innerHTML='<div class="empty">Tableau de bord indisponible pour le moment.</div>';return}
+  const pw=store.get('ig_pw');
+  if(pw){try{const k=await derive(pw,meta);await open(hex(meta.check),k);KEY=k}catch(e){store.set('ig_pw',null)}}
+  if(!KEY)return login(meta);
+  await loadData();
+}
+function login(meta){
+  $('#main').innerHTML=`<div class="login"><h2>Tableau de bord</h2><p class="sub">Contenu privé. Entre le mot de passe (une seule fois par appareil).</p>
+  <form id="lf"><input type="password" id="pw" autocomplete="current-password" placeholder="Mot de passe"><button class="btn b2">Ouvrir</button><div class="msg err" id="lm"></div></form></div>`;
+  $('#pw').focus();
+  $('#lf').onsubmit=async e=>{e.preventDefault();const pw=$('#pw').value.trim();$('#lm').textContent='';
+    try{const k=await derive(pw,meta);await open(hex(meta.check),k);KEY=k;store.set('ig_pw',pw);loadData()}catch(_){$('#lm').textContent='Mot de passe incorrect.'}};
+}
+async function loadData(){
+  $('#hdr').style.display='';$('#main').textContent='Chargement…';
+  try{T=JSON.parse(new TextDecoder().decode(await getBin('d.bin')))}catch(e){$('#main').innerHTML='<div class="empty">Données illisibles (mot de passe changé ?). <button class="small" onclick="store.set(\'ig_pw\',null);location.reload()">Ressaisir</button></div>';return}
+  $('#gen').textContent='mis à jour '+new Date(T.generated).toLocaleString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  POST=null;POSTURLS=[];
+  try{const pj=await (await fetch('post.json?t='+Date.now(),{cache:'no-store'})).json();
+    if(pj.date===today&&pj.count){POST=JSON.parse(new TextDecoder().decode(await getBin('p.bin')))}}catch(e){POST=null}
+  route();
+}
+function route(){const h=decodeURIComponent(location.hash.slice(1));
+  if(h.startsWith('serie=')){tab='series';const [id,date]=h.slice(6).split('@');detail={id,date}}
+  else if(['jour','cal','series','reg'].includes(h)){tab=h;detail=null}
+  render()}
+addEventListener('hashchange',()=>{if(T)route()});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{location.hash=b.dataset.t;scrollTo(0,0)});
+function render(){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+  ({jour:rJour,cal:rCal,series:rSeries,reg:rReg})[tab]();hydrate();bindZoom();bindCar()}
+
+/* ---------- carrousel ---------- */
+function carousel(items){ // items: [{html(img), lr, sub}]
+  return `<div class="car"><div class="track">${items.map((it,i)=>`<figure class="slide"><div class="fr">${it.img}</div><figcaption><span>${i+1} / ${items.length}</span><span><b>${esc(it.lr||'')}</b>${it.sub?' · '+esc(it.sub):''}</span></figcaption></figure>`).join('')}</div>
+  ${items.length>1?'<button class="arrow l" aria-label="Précédente">‹</button><button class="arrow r" aria-label="Suivante">›</button>':''}</div>`}
+function bindCar(){document.querySelectorAll('.car').forEach(c=>{const tr=c.querySelector('.track');
+  c.querySelectorAll('.arrow').forEach(a=>a.onclick=()=>tr.scrollBy({left:(a.classList.contains('l')?-1:1)*tr.clientWidth,behavior:'smooth'}))})}
+
+/* ---------- Aujourd'hui ---------- */
+function rJour(){
+  let h='<h2>Post du jour</h2>';
+  if(POST){const s=S(POST.series);
+    const items=POST.files.map((f,i)=>{const p=s?ph(s,POST.photos[i]):{};return{img:`<img class="e zoom" data-p="${f}" alt="Photo ${i+1}" data-lr="${esc(p.lr_file||'')}" data-fo="${esc(p.lr_folder||'')}">`,lr:p.lr_file}});
+    h+=`<div class="card"><h3>${esc(POST.title||POST.series)}</h3><div class="sub">${POST.count} photos · ${fmt(POST.date)}${s?` · <span class="tag">${esc(s.chapitre)}</span>`:''}${POST.event?`<span class="tag ev">${esc(POST.event)}</span>`:''}</div>
+    ${carousel(items)}
+    <div style="height:8px"></div>
+    <button class="btn b1" id="copy">1. Copier la légende</button><div class="msg" id="m1"></div>
+    <button class="btn b2" id="share">2. Envoyer les ${POST.count} photos vers Instagram</button><div class="msg" id="m2"></div>
+    <ol><li>Dans Instagram, choisis <b>Publication</b>.</li><li>Va sur une photo <b>verticale</b>, touche l'icône de format et choisis <b>Mixte</b>.</li><li>Réorganise, ajoute une musique si tu veux.</li><li>Colle la légende (appui long › Coller), puis Partager.</li></ol>
+    <details><summary>Voir la légende</summary><pre>${esc(POST.caption)}</pre></details>
+    <div class="a" style="display:flex;gap:6px;flex-wrap:wrap">${s?`<button class="small" onclick="location.hash='serie=${s.id}@${today}'">Remplacer une photo de ce post</button><button class="small red" id="refuse">Refuser cette série</button>`:''}</div></div>`;
+  } else h+=`<div class="empty">${T._restage?'Nouveau post en préparation (2-3 min). <button class="small" onclick="location.reload()">Recharger</button>':`Pas de post aujourd'hui (${fmt(today)}).`}</div>`;
+  if(T._stale)h+=`<div class="warn">Modification enregistrée : le calendrier se recalcule (1-2 min). <button class="small" onclick="location.reload()">Recharger</button></div>`;
+  const recent=(T.history||[]).filter(p=>p.date<today).slice(-5).reverse();
+  if(recent.length)h+=`<h2>Derniers posts</h2><div class="sub">Pas publié un jour ? « Pas posté » : le post ne compte pas et la série est mise de côté pour être retravaillée.</div><div class="card" style="padding:2px 14px">${recent.map(p=>{const x=S(p.series);
+    const st=p.status==='refused'?'<span class="tag no">refusé · pas posté</span>':p.status==='published'?'<span class="tag ok">publié</span>':`<span class="tag">${esc(p.status||'')}</span>`;
+    const can=p.status==='published'&&x&&!x.virtual&&(D(today)-D(p.date))/864e5<=7;
+    return `<div class="day" onclick="location.hash='serie=${p.series}'"><div class="d"><b>${D(p.date).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</b>${D(p.date).toLocaleDateString('fr-FR',{weekday:'long'})}</div><div class="body"><b>${esc(x?x.title:p.series)}</b> ${st}${p.motif?`<div class="sub">${esc(p.motif)}</div>`:''}${can?`<div style="margin-top:6px"><button class="small red" data-notposted="${esc(p.series)}|${p.date}">Pas posté</button></div>`:''}</div></div>`}).join('')}</div>`;
+  const next=T.upcoming.filter(u=>u.date>today&&u.series).slice(0,3);
+  if(next.length)h+=`<h2>Prochains posts</h2><div class="card" style="padding:2px 14px">${next.map(dayRow).join('')}</div><button class="small" onclick="location.hash='cal'">Tout le calendrier</button>`;
+  const gaps=T.upcoming.filter(u=>!u.series);
+  const todo=T.upcoming.find(u=>u.series&&S(u.series)&&S(u.series).virtual);
+  if(todo)h+=`<div class="warn">À construire en premier : <b>${esc(S(todo.series).title)}</b> (${esc(S(todo.series).chapitre)}), prévue le <b>${fmt(todo.date,{day:'numeric',month:'long'})}</b>.</div>`;
+  if(gaps.length)h+=`<div class="warn">⚠️ Plus de série disponible à partir du <b>${fmt(gaps[0].date,{day:'numeric',month:'long'})}</b> : il faut de nouvelles séries.</div>`;
+  $('#main').innerHTML=h;
+  document.querySelectorAll('[data-notposted]').forEach(b=>b.onclick=e=>{e.stopPropagation();const [id,d]=b.dataset.notposted.split('|');refuseSheet(S(id),d)});
+  if(!POST)return;
+  if($('#refuse'))$('#refuse').onclick=()=>refuseSheet(S(POST.series),today);
+  $('#copy').onclick=async()=>{try{await navigator.clipboard.writeText(POST.caption);$('#m1').textContent='Légende copiée ✓'}catch(e){$('#m1').textContent='Copie impossible : ouvre « Voir la légende ».'}};
+  const files=()=>Promise.all(POST.files.map(async(f,i)=>new File([await getBin(f)],`${POST.date}-${String(i+1).padStart(2,'0')}.jpg`,{type:'image/jpeg'})));
+  let F=null;const ld=()=>F||(F=files());ld().catch(()=>{F=null});
+  $('#share').onclick=async()=>{const b=$('#share');b.disabled=true;$('#m2').textContent='Préparation des photos…';
+    try{const fs=await ld();if(!navigator.canShare||!navigator.canShare({files:fs})){$('#m2').textContent='Ce navigateur ne sait pas partager des photos : ouvre la page sur ton téléphone.';return}
+      await navigator.share({files:fs});$('#m2').textContent='Envoyé ✓ Termine dans Instagram.'}
+    catch(e){$('#m2').textContent=e.name==='AbortError'?'Partage annulé.':'Erreur : '+e.message}finally{b.disabled=false}};
+}
+
+/* ---------- Calendrier ---------- */
+function dayRow(u){
+  const s=u.series&&S(u.series);const d=D(u.date);
+  const lbl=`<div class="d"><b>${d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</b>${d.toLocaleDateString('fr-FR',{weekday:'long'})}</div>`;
+  const ev=(u.event?`<span class="tag ev">${esc(u.event)}</span>`:'')+(T.choix&&T.choix[u.date]&&T.choix[u.date]===u.series?'<span class="tag ok">choisie</span>':'');
+  if(!s)return `<div class="day gap">${lbl}<div class="body">Rien de disponible ${ev}${u.event_todo?'<span class="tag todo">série à construire</span>':''}</div></div>`;
+  if(s.virtual&&!s.selection)return `<div class="day" onclick="location.hash='serie=${s.id}@${u.date}'">${lbl}<div class="body"><b>${esc(s.title)}</b> <span class="tag">${esc(s.chapitre)}</span>${ev}<span class="tag todo">à construire</span></div></div>`;
+  if(s.virtual)return `<div class="day" onclick="location.hash='serie=${s.id}@${u.date}'">${lbl}<div class="body"><b>${esc(s.title)}</b> <span class="tag">${esc(s.chapitre)}</span>${ev}<span class="tag ev">sélection à valider</span>
+  <div class="strip">${u.photos.map(f=>im(ph(s,f),'v')).join('')}</div></div></div>`;
+  return `<div class="day${u.date===today?' today':''}" onclick="location.hash='serie=${s.id}@${u.date}'">${lbl}<div class="body"><b>${esc(s.title)}</b> <span class="tag">${esc(s.chapitre)}</span>${ev}
+  <div class="strip">${u.photos.map(f=>im(ph(s,f),'v')).join('')}</div></div></div>`}
+function rCal(){
+  let h='<h2>Programme</h2><div class="card" style="padding:4px 14px">'+(T.programme||[]).map(c=>{
+    const all=T.upcoming.filter(u=>u.series&&S(u.series)&&S(u.series).chapitre===c.nom&&!u.event);const days=[];
+    for(const u of all){if(days.length&&(D(u.date)-D(days[days.length-1].date))/864e5>8)break;days.push(u)}
+    const ready=c.series.filter(id=>S(id)&&!S(id).virtual).length;const sel=c.series.filter(id=>S(id)&&S(id).virtual&&S(id).selection).length;
+    if(!days.length){const ev=T.upcoming.filter(u=>u.series&&S(u.series)&&S(u.series).chapitre===c.nom).slice(0,c.series.length);days.push(...ev)}
+    const from=days[0],to=days[days.length-1];
+    return `<div class="row" style="padding:9px 0"><div class="t"><b style="font-family:inherit;white-space:normal">${esc(c.nom)}</b><span>${from?fmt(from.date,{day:'numeric',month:'short'})+' → '+fmt(to.date,{day:'numeric',month:'short'}):'après le '+fmt(T.upcoming[T.upcoming.length-1].date,{day:'numeric',month:'short'})} · ${ready}/${c.series.length} séries prêtes</span></div>${ready<c.series.length?(sel?'<span class="tag ev">'+sel+' à valider</span>':'')+(c.series.length-ready-sel?'<span class="tag todo">'+(c.series.length-ready-sel)+' à construire</span>':''):'<span class="tag">prêt</span>'}</div>`}).join('')+'</div>';
+  h+='<h2>Jour par jour</h2><div class="sub">Touche un jour pour voir le carrousel en grand, les noms Lightroom, et remplacer une photo.</div>';
+  let wk=null,buf='';const flush=()=>{if(buf)h+=`<div class="card" style="padding:2px 14px">${buf}</div>`;buf=''};
+  for(const u of T.upcoming){const d=D(u.date);const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));
+    const k=mon.toDateString();if(k!==wk){flush();wk=k;h+=`<div class="week">Semaine du ${mon.toLocaleDateString('fr-FR',{day:'numeric',month:'long'})}</div>`}buf+=dayRow(u)}
+  flush();
+  h+=`<h2>Temps forts</h2><div class="card" style="padding:2px 14px">${T.events.map(e=>`<div class="day" style="cursor:default"><div class="d"><b>${D(e.date).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}</b>${D(e.date).getFullYear()}</div><div class="body"><b>${esc(e.nom)}</b><br>${e.serie&&S(e.serie)?`<span class="tag">${esc(S(e.serie).title)}</span>`:`<span class="tag todo">à construire</span> <span class="sub">${esc(e.idee||'')}</span>`}</div></div>`).join('')}</div>`;
+  $('#main').innerHTML=h}
+
+/* ---------- Séries ---------- */
+function rSeries(){
+  if(detail&&S(detail.id))return rDetail(S(detail.id),detail.date);
+  let h='';const chaps=[...T.chapitres,...new Set(T.series.map(s=>s.chapitre).filter(c=>!T.chapitres.includes(c)))];
+  for(const c of chaps){const list=T.series.filter(s=>s.chapitre===c);if(!list.length)continue;
+    h+=`<h2>${esc(c||'Sans chapitre')} <span class="sub">· ${list.length} série${list.length>1?'s':''}</span></h2><div class="series-list">${list.map(s=>{
+      const nx=T.upcoming.find(u=>u.series===s.id);const core=s.photos.filter(p=>p.role!=='alt');
+      if(s.virtual&&s.selection)return `<div class="sc" onclick="location.hash='serie=${s.id}${nx?'@'+nx.date:''}'">${im(core[0]||{},'l')}<div class="t"><b>${esc(s.title)}</b><span>sélection à valider<br>${nx?'prévue le '+fmt(nx.date,{day:'numeric',month:'short'}):'pas prévue'}</span></div></div>`;
+      if(s.virtual)return `<div class="sc" onclick="location.hash='serie=${s.id}'"><div style="aspect-ratio:4/3;background:var(--soft);display:flex;align-items:center;justify-content:center;color:var(--mute);font-size:13px">à construire</div><div class="t"><b>${esc(s.title)}</b><span>${nx?'prévue le '+fmt(nx.date,{day:'numeric',month:'short'}):'pas prévue'}</span></div></div>`;
+      return `<div class="sc" onclick="location.hash='serie=${s.id}${nx?'@'+nx.date:''}'">${im(core[0]||{},'l')}<div class="t"><b>${esc(s.title)}</b><span>${core.length} + ${s.photos.length-core.length} photos${s.saisons.length?' · '+s.saisons.map(x=>SAI[x]||x).join(', '):''}<br>${nx?'prévue le '+fmt(nx.date,{day:'numeric',month:'short'}):'pas prévue'}${s.refus?' · <b style="color:var(--warn)">à retravailler</b>':s.enabled?'':' · en pause'}</span></div></div>`}).join('')}</div>`}
+  $('#main').innerHTML=h}
+function planned(s,date){return T.upcoming.find(u=>u.series===s.id&&(!date||u.date===date))||T.upcoming.find(u=>u.series===s.id)}
+function rDetail(s,date){
+  const up=planned(s,date);
+  if(s.virtual&&!s.selection){$('#main').innerHTML=`<button class="small" onclick="history.length>1?history.back():location.hash='series'">‹ Retour</button><div class="card" style="margin-top:10px"><h3>${esc(s.title)}</h3><div class="sub"><span class="tag">${esc(s.chapitre)}</span><span class="tag todo">à construire</span></div><div class="sub" style="margin-top:8px">${up?'Prévue le <b>'+fmt(up.date)+'</b>. ':''}Photos : ${esc(s.notes)}</div></div>`;return}
+  const order=up?up.photos:s.photos.filter(p=>p.role!=='alt').map(p=>p.file);
+  const rest=s.photos.filter(p=>!order.includes(p.file));
+  const items=order.map(f=>{const p=ph(s,f);return{img:im(p,'l','zoom',`data-lr="${esc(p.lr_file||'')}" data-fo="${esc(p.lr_folder||'')}"`),lr:p.lr_file,sub:p.lr_copy?'copie « '+p.lr_copy+' »':''}});
+  const row=(p,i,canRep)=>`<div class="row"><div class="i">${i}</div>${im(p,'v','zoom',`data-big="l/${p.k}.bin" data-lr="${esc(p.lr_file||'')}" data-fo="${esc(p.lr_folder||'')}"`)}
+    <div class="t"><b>${esc(p.lr_file||p.file)}</b><span>${esc(p.lr_folder||'')}${p.lr_copy?' · copie « '+esc(p.lr_copy)+' »':''}</span>
+    <div class="a"><button class="small" data-copy="${esc((p.lr_file||'').replace(/\.[^.]+$/,''))}">Copier</button>${canRep?`<button class="small dark" data-rep="${esc(p.file)}">Remplacer</button>`:''}</div></div></div>`;
+  let h=`<button class="small" onclick="history.length>1?history.back():location.hash='series'">‹ Retour</button>
+  <div class="card" style="margin-top:10px"><h3>${esc(s.title)}</h3><div class="sub"><span class="tag">${esc(s.chapitre)}</span>${esc(s.location)}${s.saisons.length?' · '+s.saisons.map(x=>SAI[x]||x).join(', '):''}</div>
+  <div class="sub" style="margin-top:6px">${up?`Prévue le <b>${fmt(up.date)}</b>${up.event?' · '+esc(up.event):''}`:'Pas prévue dans les 10 prochaines semaines'}${s.published.length?' · publiée le '+s.published.map(d=>fmt(d,{day:'numeric',month:'short'})).join(', '):''}</div>
+  ${carousel(items)}</div>
+  ${s.refus?`<div class="warn">Série mise de côté le ${fmt(s.refus.date,{day:'numeric',month:'long'})}${s.refus.motif?' : <b>'+esc(s.refus.motif)+'</b>':''}. Elle ne sortira plus tant qu'elle n'est pas remise en circulation (après retouche ou nouvelle sélection).<div style="margin-top:8px"><button class="small dark" id="back">Remettre en circulation</button></div></div>`:''}
+  ${up&&!s.virtual&&!s.refus&&up.date>=today?`<button class="small red" id="refuse" style="margin-bottom:6px">Refuser cette série (post du ${fmt(up.date,{day:'numeric',month:'short'})})</button>`:''}
+  ${s.virtual?'<div class="warn">Sélection proposée, pas encore exportée de Lightroom. Aperçus sans retouche finale. Dis à Claude ce qu\'il faut changer.</div>':''}
+  <h2>${up?'Photos du carrousel':'Photos de la série'}</h2>
+  <div class="sub">Copier = nom du fichier, à coller dans Lightroom (Bibliothèque › filtre Texte › Nom de fichier). Remplacer = choisir une autre photo à la place.</div>
+  <div class="card" style="padding:2px 12px">${order.map((f,i)=>row(ph(s,f),i+1,!s.virtual)).join('')}</div>
+  ${rest.length?`<h2>Réserve</h2><div class="card" style="padding:2px 12px">${rest.map(p=>row(p,'',false)).join('')}</div>`:''}
+  <h2>Légendes</h2>${s.captions.map((c,i)=>`<details class="card"><summary>Variante ${i+1}</summary><pre>${esc(c)}</pre></details>`).join('')}`;
+  $('#main').innerHTML=h;
+  document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async e=>{e.stopPropagation();try{await navigator.clipboard.writeText(b.dataset.copy);b.textContent='Copié ✓';setTimeout(()=>b.textContent='Copier',1500)}catch(_){toast(b.dataset.copy)}});
+  document.querySelectorAll('[data-rep]').forEach(b=>b.onclick=()=>chooser(s,b.dataset.rep,up));
+  if($('#refuse'))$('#refuse').onclick=()=>refuseSheet(s,up.date);
+  if($('#back'))$('#back').onclick=()=>restore(s);
+}
+
+/* ---------- Remplacer une photo ---------- */
+function chooser(s,file,up){
+  if(!store.get('ig_tok')){toast('Pour modifier les séries, ajoute d\'abord ton jeton GitHub dans Réglages.',5000);return}
+  const old=ph(s,file);const inUse=new Set(s.photos.map(p=>p.lr_file+'|'+p.lr_folder));
+  const order=up?up.photos:[];
+  const own=s.photos.filter(p=>p.file!==file&&!order.includes(p.file));
+  const others=T.series.filter(x=>x.id!==s.id&&x.chapitre===s.chapitre).flatMap(x=>x.photos.filter(p=>!inUse.has(p.lr_file+'|'+p.lr_folder)).map(p=>({...p,_from:x})));
+  const seen=new Set();const oth=others.filter(p=>{const k=p.lr_file+'|'+p.lr_folder;if(seen.has(k))return false;seen.add(k);return true});
+  const card=(p,src)=>`<div class="cand" data-src="${src}" data-f="${esc(p.file)}">${im(p,'v')}<div><b>${esc(p.lr_file||p.file)}</b>${p._from?esc(p._from.title):'réserve'}</div></div>`;
+  $('#sheetin').innerHTML=`<div style="display:flex;align-items:center;gap:10px"><h3 style="flex:1">Remplacer ${esc(old.lr_file||old.file)}</h3><button class="small" id="shx">Fermer</button></div>
+  <div class="sub">${esc(s.title)}${up?' · post du '+fmt(up.date,{day:'numeric',month:'long'}):''}</div>
+  <h2 style="font-size:15px">Réserve de la série</h2>${own.length?`<div class="grid">${own.map(p=>card(p,s.id)).join('')}</div>`:'<div class="sub">Pas de photo de réserve dans cette série.</div>'}
+  <h2 style="font-size:15px">Autres séries · ${esc(s.chapitre)}</h2>${oth.length?`<div class="grid">${oth.map(p=>card(p,p._from.id)).join('')}</div>`:'<div class="sub">Aucune autre photo dans ce chapitre.</div>'}
+  <div class="confirm" id="cf" style="display:none"></div>`;
+  $('#sheet').style.display='flex';hydrate($('#sheet'));
+  $('#shx').onclick=()=>$('#sheet').style.display='none';
+  $('#sheet').onclick=e=>{if(e.target.id==='sheet')$('#sheet').style.display='none'};
+  document.querySelectorAll('#sheet .cand').forEach(c=>c.onclick=()=>{
+    document.querySelectorAll('#sheet .cand').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');
+    const src=S(c.dataset.src),np=ph(src,c.dataset.f);
+    $('#cf').style.display='block';
+    $('#cf').innerHTML=`<div class="cmp">${im(old,'l')}<span>→</span>${im(np,'l')}</div>
+    <div class="sub" style="margin-bottom:8px"><b>${esc(old.lr_file)}</b> passe en réserve, <b>${esc(np.lr_file)}</b> prend sa place${src.id!==s.id?' (copiée depuis « '+esc(src.title)+' »)':''}.</div>
+    <button class="btn b2" id="go">Remplacer</button><div class="msg" id="gm"></div>`;hydrate($('#cf'));
+    $('#cf').scrollIntoView({block:'end',behavior:'smooth'});
+    $('#go').onclick=()=>replace(s,file,src,c.dataset.f,up)});
+}
+async function gh(path,opt){const r=await fetch('https://api.github.com/repos/'+T.repo+path,{...opt,headers:{'Authorization':'Bearer '+store.get('ig_tok'),'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',...(opt&&opt.body?{'Content-Type':'application/json'}:{})}});
+  if(!r.ok){let m='';try{m=(await r.json()).message}catch(_){};throw new Error(`GitHub ${r.status} ${m}`)}return r.status===204?null:r.json()}
+async function replace(s,file,src,srcFile,up){
+  const b=$('#go');b.disabled=true;$('#gm').className='msg';$('#gm').textContent='Enregistrement…';
+  try{
+    const ref=await gh('/git/ref/heads/main');const head=ref.object.sha;const commit=await gh('/git/commits/'+head);
+    const cur=await gh(`/contents/series/${s.id}/series.json?ref=${head}`);
+    const js=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(cur.content.replace(/\n/g,'')),c=>c.charCodeAt(0))));
+    const P=js.photos;const iOld=P.findIndex(p=>p.file===file);if(iOld<0)throw new Error('photo introuvable dans la série');
+    const tree=[];let newFile=srcFile,entry;
+    if(src.id===s.id){const iNew=P.findIndex(p=>p.file===srcFile);entry=P[iNew];
+      const oldRole=P[iOld].role||'core',newRole=entry.role||'alt';entry.role=oldRole;P[iOld].role=newRole==='opener'?'core':newRole;
+      if(oldRole==='opener')entry.can_open=true;
+      [P[iOld],P[iNew]]=[P[iNew],P[iOld]];
+    } else {
+      const all=await gh(`/git/trees/${commit.tree.sha}?recursive=1`);const blobs=Object.fromEntries(all.tree.map(t=>[t.path,t.sha]));
+      let n=1;while(P.some(p=>p.file===`x${String(n).padStart(2,'0')}.jpg`))n++;newFile=`x${String(n).padStart(2,'0')}.jpg`;
+      const sp=ph(src,srcFile);
+      for(const dir of ['img','raw']){const sha=blobs[`series/${src.id}/${dir}/${srcFile}`];if(sha)tree.push({path:`series/${s.id}/${dir}/${newFile}`,mode:'100644',type:'blob',sha})}
+      if(!tree.length)throw new Error('image source introuvable');
+      entry={role:P[iOld].role||'core',can_open:true,file:newFile,orientation:sp.orientation,lr_file:sp.lr_file,lr_folder:sp.lr_folder,...(sp.lr_copy?{lr_copy:sp.lr_copy}:{}),copied_from:`${src.id}/${srcFile}`};
+      const out=P[iOld];out.role='alt';P.splice(iOld,1,entry);P.push(out);
+    }
+    const blob=await gh('/git/blobs',{method:'POST',body:JSON.stringify({content:JSON.stringify(js,null,1)+'\n',encoding:'utf-8'})});
+    tree.push({path:`series/${s.id}/series.json`,mode:'100644',type:'blob',sha:blob.sha});
+    const nt=await gh('/git/trees',{method:'POST',body:JSON.stringify({base_tree:commit.tree.sha,tree})});
+    const msg=`${s.title} : ${ph(s,file).lr_file} remplacée par ${ph(src,srcFile).lr_file} (tableau de bord)`;
+    const nc=await gh('/git/commits',{method:'POST',body:JSON.stringify({message:msg,tree:nt.sha,parents:[head]})});
+    await gh('/git/refs/heads/main',{method:'PATCH',body:JSON.stringify({sha:nc.sha})});
+    let extra='';
+    if(POST&&POST.series===s.id&&up&&up.date===today){
+      try{await gh('/actions/workflows/publish.yml/dispatches',{method:'POST',body:JSON.stringify({ref:'main',inputs:{mode:'stage',force:true}})});extra=' Le post du jour est re-préparé (2-3 min).'}
+      catch(e){extra=' (Re-préparation du post du jour impossible : '+e.message+')'}}
+    // mise à jour locale immédiate
+    const sp=ph(src,srcFile);const loc={...sp,file:newFile,role:ph(s,file).role};delete loc._from;
+    if(src.id===s.id){const o=ph(s,file);[o.role,sp.role]=[sp.role||'alt',o.role||'core'];}
+    else{ph(s,file).role='alt';s.photos.push(loc)}
+    T.upcoming.filter(u=>u.series===s.id).forEach(u=>{const i=u.photos.indexOf(file);if(i>=0)u.photos[i]=newFile});
+    $('#sheet').style.display='none';render();toast('Enregistré ✓ Le tableau se met à jour dans 1-2 min.'+extra,6000);
+  }catch(e){$('#gm').className='msg err';$('#gm').textContent='Échec : '+e.message;b.disabled=false}
+}
+
+/* ---------- Refuser une série ---------- */
+const b64=t=>new TextDecoder().decode(Uint8Array.from(atob(t.replace(/\n/g,'')),c=>c.charCodeAt(0)));
+async function readJSON(path,ref,dflt){try{const r=await gh(`/contents/${path}?ref=${ref}`);return JSON.parse(b64(r.content))}catch(e){if(/GitHub 404/.test(e.message)&&dflt!==undefined)return dflt;throw e}}
+async function commitFiles(edit,msg){ // edit(ref) -> {chemin: objet JSON}
+  const ref=await gh('/git/ref/heads/main');const head=ref.object.sha;const commit=await gh('/git/commits/'+head);
+  const files=await edit(head);const tree=[];
+  for(const [path,obj] of Object.entries(files)){const blob=await gh('/git/blobs',{method:'POST',body:JSON.stringify({content:JSON.stringify(obj,null,1)+'\n',encoding:'utf-8'})});tree.push({path,mode:'100644',type:'blob',sha:blob.sha})}
+  const nt=await gh('/git/trees',{method:'POST',body:JSON.stringify({base_tree:commit.tree.sha,tree})});
+  const nc=await gh('/git/commits',{method:'POST',body:JSON.stringify({message:msg,tree:nt.sha,parents:[head]})});
+  await gh('/git/refs/heads/main',{method:'PATCH',body:JSON.stringify({sha:nc.sha})});
+}
+function candidates(s,date){
+  const cd=T.cooldown||60;
+  const ok=T.series.filter(x=>x.id!==s.id&&!x.virtual&&x.enabled&&!x.refus&&x.photos.length&&
+    !x.published.some(d=>Math.abs(D(date)-D(d))/864e5<cd));
+  const next=id=>{const u=T.upcoming.find(u=>u.series===id&&u.date>=date);return u?u.date:'9999'};
+  return ok.sort((a,b)=>(a.chapitre!==s.chapitre)-(b.chapitre!==s.chapitre)||(a.published.length>0)-(b.published.length>0)||next(a.id).localeCompare(next(b.id)));
+}
+function refuseSheet(s,date){
+  if(!s)return;
+  if(!store.get('ig_tok')){toast('Pour refuser une série, ajoute d\'abord ton jeton GitHub dans Réglages.',5000);return}
+  const past=date<today,isToday=date===today;
+  const cands=past?[]:candidates(s,date);
+  const MOT=['Photos pas retouchées','Sélection pas terrible','Teintes pas homogènes','Pas le bon moment'];
+  const card=x=>{const c=x.photos.find(p=>p.role==='opener')||x.photos[0];const nx=T.upcoming.find(u=>u.series===x.id&&u.date>=date);
+    return `<div class="cand" data-id="${x.id}">${im(c,'v')}<div><b style="font-family:inherit">${esc(x.title)}</b>${esc(x.chapitre)}${nx?' · prévue le '+fmt(nx.date,{day:'numeric',month:'short'}):''}${x.published.length?' · déjà publiée':''}</div></div>`};
+  $('#sheetin').innerHTML=`<div style="display:flex;align-items:center;gap:10px"><h3 style="flex:1">${past?'Pas posté':'Refuser'} · ${esc(s.title)}</h3><button class="small" id="shx">Fermer</button></div>
+  <div class="sub">${past?'Post du '+fmt(date)+' : il ne comptera pas comme publié.':(isToday?'Post d\'aujourd\'hui':'Post prévu le '+fmt(date))}</div>
+  <h2 style="font-size:15px">Pourquoi ?</h2><div class="chips" id="mot">${MOT.map(m=>`<button class="chip" data-m="${esc(m)}">${esc(m)}</button>`).join('')}</div>
+  <input type="text" id="motx" placeholder="Autre raison (facultatif)">
+  <label class="ck"><input type="checkbox" id="aside" checked><span><b>Mettre la série de côté pour la retravailler</b><br><span class="sub">Elle ne ressort plus tant que tu ne la remets pas en circulation (fiche de la série). Décoché : elle reste au calendrier et ressortira plus tard.</span></span></label>
+  ${past?'':`<h2 style="font-size:15px">À la place, le ${fmt(date,{day:'numeric',month:'long'})}</h2>
+  <div class="grid" id="cg"><div class="cand sel" data-id=""><div style="aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:var(--soft);color:var(--ink);font-weight:600;font-size:13px;padding:8px;text-align:center">Automatique<br>(la suivante prévue)</div><div>selon le chapitre en cours</div></div>${cands.map(card).join('')}</div>`}
+  <div class="confirm"><button class="btn b2" id="go">${past?'Marquer comme pas posté':'Refuser et remplacer'}</button><div class="msg" id="gm"></div></div>`;
+  $('#sheet').style.display='flex';hydrate($('#sheet'));
+  $('#shx').onclick=()=>$('#sheet').style.display='none';
+  $('#sheet').onclick=e=>{if(e.target.id==='sheet')$('#sheet').style.display='none'};
+  let motif='',pick='';
+  document.querySelectorAll('#mot .chip').forEach(c=>c.onclick=()=>{const on=!c.classList.contains('on');document.querySelectorAll('#mot .chip').forEach(x=>x.classList.remove('on'));if(on)c.classList.add('on');motif=on?c.dataset.m:''});
+  document.querySelectorAll('#cg .cand').forEach(c=>c.onclick=()=>{document.querySelectorAll('#cg .cand').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');pick=c.dataset.id});
+  $('#go').onclick=async()=>{
+    const aside=$('#aside').checked;const why=[motif,$('#motx').value.trim()].filter(Boolean).join(' · ');
+    if(!past&&!aside&&!pick){$('#gm').className='msg err';$('#gm').textContent='Série gardée au calendrier : choisis celle qui la remplace ce jour-là.';return}
+    const b=$('#go');b.disabled=true;$('#gm').className='msg';$('#gm').textContent='Enregistrement…';
+    try{
+      let hadPost=false;
+      await commitFiles(async ref=>{
+        const out={};
+        if(aside){const js=await readJSON(`series/${s.id}/series.json`,ref);js.enabled=false;js.refus={date:today,post:date,...(why?{motif:why}:{})};out[`series/${s.id}/series.json`]=js}
+        const ch=await readJSON('state/choix.json',ref,{});const before=JSON.stringify(ch);
+        if(pick)ch[date]=pick;else if(ch[date]===s.id)delete ch[date];
+        if(JSON.stringify(ch)!==before)out['state/choix.json']=ch;
+        const hi=await readJSON('state/history.json',ref,{posts:[]});
+        const e=hi.posts.find(p=>p.date===date&&p.series===s.id&&p.status==='published');
+        if(e){e.status='refused';if(why)e.motif=why;hadPost=true;out['state/history.json']=hi}
+        if(!Object.keys(out).length)throw new Error('rien à changer');
+        return out},
+        `${s.title} : refusée pour le ${date}${why?' ('+why+')':''}${pick?', remplacée par '+S(pick).title:''} (tableau de bord)`);
+      let extra='';
+      if(isToday&&hadPost){try{await gh('/actions/workflows/publish.yml/dispatches',{method:'POST',body:JSON.stringify({ref:'main',inputs:{mode:'stage',force:true}})});POST=null;T._restage=true;extra=' Nouveau post du jour en préparation (2-3 min).'}
+        catch(e){extra=' (Re-préparation du post du jour impossible : '+e.message+')'}}
+      if(aside){s.enabled=false;s.refus={date:today,post:date,motif:why}}
+      if(pick){T.choix=T.choix||{};T.choix[date]=pick}
+      const h=(T.history||[]).find(p=>p.date===date&&p.series===s.id);if(h&&past){h.status='refused';h.motif=why}
+      T._stale=true;$('#sheet').style.display='none';render();toast('Enregistré ✓'+extra,6000);
+    }catch(e){$('#gm').className='msg err';$('#gm').textContent='Échec : '+e.message;b.disabled=false}
+  };
+}
+async function restore(s){
+  if(!store.get('ig_tok')){toast('Ajoute d\'abord ton jeton GitHub dans Réglages.',5000);return}
+  const b=$('#back');b.disabled=true;
+  try{await commitFiles(async ref=>{const js=await readJSON(`series/${s.id}/series.json`,ref);js.enabled=true;delete js.refus;return{[`series/${s.id}/series.json`]:js}},`${s.title} : remise en circulation (tableau de bord)`);
+    s.enabled=true;delete s.refus;T._stale=true;render();toast('Série remise en circulation ✓ Le calendrier se recalcule (1-2 min).',5000)}
+  catch(e){b.disabled=false;toast('Échec : '+e.message,6000)}
+}
+
+/* ---------- Réglages ---------- */
+function rReg(){
+  const t=T.ntfy_topic,tok=store.get('ig_tok');
+  $('#main').innerHTML=`<h2>Rappel quotidien</h2><div class="card">
+  <p style="margin-top:0">Chaque jour de post, une notification arrive à <b>18 h</b> (appli <b>ntfy</b>) et ouvre cette page.</p>
+  <ol><li>Dans ntfy, touche <b>+</b>.</li><li>Sujet : <code>${esc(t)}</code> <button class="small" id="ct">Copier</button></li><li>Serveur par défaut (ntfy.sh), puis <b>S'abonner</b>.</li></ol>
+  <button class="btn b2" id="test" style="margin-top:12px">Envoyer une notification de test</button><div class="msg" id="mt"></div></div>
+  <h2>Modifier les séries (Remplacer)</h2><div class="card">
+  <p style="margin-top:0">Pour que le bouton <b>Remplacer</b> puisse enregistrer dans ton dépôt privé, la page a besoin d'un <b>jeton GitHub</b>, à créer une fois :</p>
+  <ol><li>Ouvre <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com › Settings › Fine-grained tokens › Generate new token</a>.</li>
+  <li>Nom : <i>Tableau de bord</i> · Expiration : 1 an.</li><li>Repository access : <b>Only select repositories</b> › <code>instagram-auto</code>.</li>
+  <li>Permissions › Repository : <b>Contents</b> = Read and write, <b>Actions</b> = Read and write.</li><li>Generate token, copie-le et colle-le ici.</li></ol>
+  <input type="password" id="tok" placeholder="github_pat_…" value="${tok?'••••••••••':''}"><button class="btn b2" id="st">Enregistrer et tester</button><div class="msg" id="sm">${tok?'Jeton enregistré sur cet appareil.':''}</div></div>
+  <h2>Cet appareil</h2><div class="card"><div class="sub" style="margin-bottom:10px">Le mot de passe et le jeton sont gardés dans ce navigateur. Sur le téléphone : menu › « Ajouter à l'écran d'accueil ».</div>
+  <button class="small" id="out">Oublier le mot de passe et le jeton sur cet appareil</button></div>`;
+  $('#ct').onclick=async()=>{try{await navigator.clipboard.writeText(t);$('#ct').textContent='Copié ✓'}catch(e){}};
+  $('#test').onclick=async()=>{$('#mt').textContent='Envoi…';
+    try{const r=await fetch('https://ntfy.sh/'+t,{method:'POST',body:'Test depuis le tableau de bord ✓',headers:{'Title':'Post du jour','Tags':'camera','Click':location.href.split('#')[0]}});
+      $('#mt').textContent=r.ok?'Envoyée ✓ Elle doit arriver dans quelques secondes.':'Échec ('+r.status+')'}catch(e){$('#mt').textContent='Échec : '+e.message}};
+  $('#st').onclick=async()=>{const v=$('#tok').value.trim();const m=$('#sm');m.className='msg';
+    if(v&&!v.startsWith('•'))store.set('ig_tok',v);if(!store.get('ig_tok')){m.className='msg err';m.textContent='Colle d\'abord le jeton.';return}
+    m.textContent='Test…';try{const r=await gh('');m.textContent=r.permissions&&r.permissions.push?'Jeton OK ✓ Le bouton Remplacer est actif.':'Le jeton ne donne pas le droit d\'écrire (Contents = Read and write).';if(!(r.permissions&&r.permissions.push))m.className='msg err'}
+    catch(e){m.className='msg err';m.textContent='Jeton refusé : '+e.message}};
+  $('#out').onclick=()=>{store.set('ig_pw',null);store.set('ig_tok',null);location.reload()};
+}
+
+/* ---------- Agrandissement ---------- */
+function bindZoom(){document.querySelectorAll('img.zoom').forEach(el=>el.onclick=e=>{e.stopPropagation();const lb=$('#lb'),img=lb.querySelector('img');img.removeAttribute('src');
+  imgURL(el.dataset.big||el.dataset.p).then(u=>img.src=u);
+  lb.querySelector('.cap').innerHTML=el.dataset.lr?`${esc(el.dataset.lr)}<span>${esc(el.dataset.fo||'')}</span>`:'';lb.style.display='flex'})}
+$('#lb').onclick=()=>$('#lb').style.display='none';
+start();
+</script></body></html>
